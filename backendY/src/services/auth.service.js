@@ -34,7 +34,7 @@ export const AuthService = {
     // email
     const user = await userRepository.findByEmail(email);
     console.log(email, user, user.password);
-    if (!user || !user.password) throw new Error("L'utilsateur n'existe pas  ou le mot de passe ou sami ou je sais pas ");
+    if (!user || !user.password) throw new Error(email, user, user.password ,"L'utilsateur n'existe pas  ou le mot de passe ou sami ou je sais pas ");
 
     
 
