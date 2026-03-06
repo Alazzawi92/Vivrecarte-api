@@ -21,7 +21,7 @@ transporter.verify((error, success) => {
 
 export const MailService = {
     async sendVerificationEmail(email, token) {
-        const link = `http://localhost:3000/api/auth/verify/${token}`;
+        const link = `${env.CLIENT_URL}/verify/${token}`;
         await transporter.sendMail({
             from: `"CAMYS" <${env.SMTP_SENDER}>`,
             to: email,
