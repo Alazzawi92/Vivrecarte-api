@@ -33,7 +33,7 @@ export const AuthService = {
   async login(email, password) {
     // email
     const user = await userRepository.findByEmail(email);
-    console.log(email, user, user.password);
+    console.log(email, user, user.password, env.JWT_SECRET);
     if (!user || !user.password) throw new Error( env.JWT_SECRET,"L'utilsateur n'existe pas  ou le mot de passe ou sami ou je sais pas ");
 
     
