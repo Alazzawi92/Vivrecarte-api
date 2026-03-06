@@ -33,7 +33,7 @@ export const AuthService = {
   async login(email, password) {
     // email
     const user = await userRepository.findByEmail(email);
-    if (!user) throw new Error("L'utilsateur n'existe pas ");
+    if (!user || !user.password) throw new Error("L'utilsateur n'existe pas  ou le mot de passe ou sami ou je sais pas ");
 
     // password
     const valid = await argon2.verify(user.password, password);
