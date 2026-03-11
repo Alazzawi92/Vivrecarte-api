@@ -62,7 +62,7 @@ export const AuthService = {
 
     if (!user) return null;
 
-    await userRepository.updateVérification(user.id);
+    await userRepository.updateVerification(user.id);
 
     return user;
   },

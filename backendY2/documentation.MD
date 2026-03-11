@@ -24,7 +24,7 @@
 ### baseURL: 
 
 ```
-https://vivre-card.vercel.app/
+https://vivre-card.vercel.app
 ```
 |-----------------------------|
 
