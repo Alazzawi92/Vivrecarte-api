@@ -9,57 +9,41 @@ import { env } from "./config/env.js";
 
 const app = express();
 
-// ================== Middlewares de sécurité ================== //
-// Helmet protège contre XSS, clickjacking et autres vulnérabilités
-app.use(helmet({
-  contentSecurityPolicy: false // activer CSP en production
-}));
+// --- CRUCIAL POUR VERCEL ---
+// On indique à Express qu'il est derrière un proxy (Vercel)
+// '1' signifie qu'on fait confiance au premier saut (hop)
+app.set("trust proxy", 1); 
 
-// CORS - limiter l'accès aux domaines légitimes
+// ================== Middlewares de sécurité ================== //
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors({
-  origin: env.CLIENT_URL, // exemple pour production
+  origin: env.CLIENT_URL,
   optionsSuccessStatus: 200
 }));
-
-// Parsing JSON
 app.use(express.json());
- 
-app.set("trust proxy", 1);
 
-
-// Limiter le nombre de requêtes global
-app.use(rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 50,                   // max 50 requêtes par IP
-  message: { error: "Trop de requêtes, réessayez plus tard" }
-}));
-
-// Limiter les tentatives sur les routes d'auth
-
-import rateLimit from "express-rate-limit";
-
-// Limiteur global
+// ================== Configuration Rate Limit ================== //
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000, 
   max: 50,
-  standardHeaders: true,  // renvoie X-RateLimit-* headers
+  standardHeaders: true,
   legacyHeaders: false,
+  validate: { trustProxy: false }, // Optionnel: désactive l'alerte si trust proxy est déjà configuré
   message: { error: "Trop de requêtes, réessayez plus tard" }
 });
 
+// Appliquer le limiteur global
 app.use(limiter);
 
- 
-
-
 // ================== Routes ================== //
-app.use('/api/auth', authLimiter, authRoutes);
-app.use('/api/users', authLimiter, userRoutes);
+// Note : Assurez-vous que 'authLimiter' est bien défini ou utilisez 'limiter'
+app.use('/api/auth', authRoutes); 
+app.use('/api/users', userRoutes);
+
 app.get("/ip", (req, res) => {
-  res.send(req.ip);
+  res.send(req.ip); // Devrait maintenant afficher l'IP réelle de l'utilisateur, pas celle de Vercel
 });
 
-// Middleware global de gestion des erreurs
 app.use(errorHandle);
 
 export default app;
