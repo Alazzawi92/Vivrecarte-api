@@ -1,24 +1,30 @@
 // User.js
 export class User {
-  constructor({ id, email, password, latitude, longitude, is_verified, verification_token }) {
-    this.id = id ?? null;
+  constructor(data = {}) {
+    const {
+      id = null,
+      email = null,
+      password = null,
+      latitude = null,
+      longitude = null,
+      is_verified = false,
+      verification_token = null
+    } = data;
 
-    // Email doit être une string valide
-    this.email = typeof email === 'string' ? email : null;
+    this.id = id;
 
-    // Password doit être hashé avant d’être assigné
-    this.password = password ?? null;
+    this.email = typeof email === "string" ? email : null;
 
-    // Latitude / longitude sécurisées
-    this.latitude = typeof latitude === 'number' ? latitude : null;
-    this.longitude = typeof longitude === 'number' ? longitude : null;
+    this.password = password;
 
-    // Champ vérifié par défaut à false
-    this.is_verified = !!is_verified;
+    this.latitude = typeof latitude === "number" ? latitude : null;
+    this.longitude = typeof longitude === "number" ? longitude : null;
 
-    // Token de vérification sensible
-    this.verification_token = verification_token ?? null;
+    this.is_verified = Boolean(is_verified);
+
+    this.verification_token = verification_token;
   }
+
 
   /**
    * Retourne uniquement les champs safe pour l’API
