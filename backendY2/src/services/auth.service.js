@@ -32,13 +32,13 @@ async login(email, password) {
   const user = await userRepository.findByEmail(email);
 
   if (!user) {
-    throw new Error("Utilisateur ou mot de passe incorrect");
+    throw new Error("Invalid credentials");
   }
 
-  const valid = await argon2.verify(user.PASSWORD, password);
+  const valid = await argon2.verify(user.password, password);
 
   if (!valid) {
-    throw new Error("Utilisateur ou mot de passe incorrect");
+    throw new Error("Invalid credentials");
   }
 
   return jwt.sign(
