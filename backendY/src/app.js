@@ -11,17 +11,15 @@ import { env } from "./config/env.js"
 const app = express()
 
 app.use(helmet(
-{    contentSecurityPolicy: true} // j'active en production avec la config adapté 
+{    contentSecurityPolicy: false} // j'active en production avec la config adapté 
 ))
 app.use(cors())
-app.set("trust proxy", true)
-app.use(express.json())
+ app.use(express.json())
 
 app.use(rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 50
 }))
-
 
 
 

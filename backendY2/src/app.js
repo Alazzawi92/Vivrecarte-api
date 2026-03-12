@@ -23,7 +23,7 @@ app.use(cors({
 
 // Parsing JSON
 app.use(express.json());
-
+app.set('trust proxy', 1);
 // Limiter le nombre de requêtes global
 app.use(rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
