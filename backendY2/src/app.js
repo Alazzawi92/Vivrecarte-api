@@ -23,7 +23,8 @@ app.use(cors({
 
 // Parsing JSON
 app.use(express.json());
-app.set('trust proxy', true);
+ 
+app.set("trust proxy", 1);
 
 
 // Limiter le nombre de requêtes global
@@ -34,17 +35,21 @@ app.use(rateLimit({
 }));
 
 // Limiter les tentatives sur les routes d'auth
-app.set("trust proxy", 1);
 
+import rateLimit from "express-rate-limit";
+
+// Limiteur global
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
+  windowMs: 15 * 60 * 1000, // 15 minutes
   max: 50,
-  standardHeaders: true,
+  standardHeaders: true,  // renvoie X-RateLimit-* headers
   legacyHeaders: false,
   message: { error: "Trop de requêtes, réessayez plus tard" }
 });
 
 app.use(limiter);
+
+ 
 
 
 // ================== Routes ================== //
