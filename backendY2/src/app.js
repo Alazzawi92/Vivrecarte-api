@@ -41,6 +41,10 @@ app.use(limiter);
 
 // ================== Routes ================== //
 // Note : Assurez-vous que 'authLimiter' est bien défini ou utilisez 'limiter'
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 app.use('/api/auth', authRoutes); 
 app.use('/api/users', userRoutes);
 

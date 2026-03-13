@@ -1,31 +1,38 @@
 import nodemailer from "nodemailer";
 import { env } from "../config/env.js";
 
-// Création du transporteur SMTP sécurisé
-const transporter = nodemailer.createTransport({
-  host: env.SMTP_HOST,
-  port: Number(env.SMTP_PORT),
-  auth: {
-    user: env.SMTP_USER,
-    pass: env.SMTP_PASS,
-  },
-});
+const transporter = env.MAIL_ENABLED
+  ? nodemailer.createTransport({
+      host: env.SMTP_HOST,
+      port: Number(env.SMTP_PORT),
+      auth: {
+        user: env.SMTP_USER,
+        pass: env.SMTP_PASS,
+      },
+    })
+  : null;
 
-// Vérification de la connexion SMTP au démarrage
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("Échec connexion SMTP :", error);
-  } else {
-    console.log("Connexion SMTP réussie :", success);
-  }
-});
+if (transporter) {
+  transporter.verify((error, success) => {
+    if (error) {
+      console.error("Échec connexion SMTP :", error);
+    } else {
+      console.log("Connexion SMTP réussie :", success);
+    }
+  });
+}
 
 // Service pour envoi des emails
 export const MailService = {
   async sendVerificationEmail(email, token) {
-    try {
-      const link = `${env.CLIENT_URL}/api/auth/verify/${token}`;
+    const link = `${env.CLIENT_URL}/api/auth/verify/${token}`;
 
+    if (!env.MAIL_ENABLED) {
+      console.log(`Email désactivé en local. Lien de vérification pour ${email}: ${link}`);
+      return;
+    }
+
+    try {
       await transporter.sendMail({
         from: `"CAMYS" <${env.SMTP_SENDER}>`, // Nom et email de l’expéditeur
         to: email,

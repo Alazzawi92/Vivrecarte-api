@@ -10,9 +10,11 @@ import { env } from "./env.js";
  */
 export const db = mysql.createPool({
   host: env.DB_HOST,
+  port: env.DB_PORT,
   user: env.DB_USER,
   password: env.DB_PASS,
   database: env.DB_NAME,
+  ssl: env.DB_SSL ? { rejectUnauthorized: true } : undefined,
   waitForConnections: true,
   connectionLimit: 80,
   namedPlaceholders: true,
@@ -26,6 +28,5 @@ export const db = mysql.createPool({
     connection.release();
   } catch (err) {
     console.error("DB connection failed:", err.message);
-    process.exit(1); // Arrêt du serveur si DB non disponible
   }
 })();
