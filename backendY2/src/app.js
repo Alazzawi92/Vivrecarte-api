@@ -40,7 +40,10 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // ================== Routes ================== //
-// Note : Assurez-vous que 'authLimiter' est bien défini ou utilisez 'limiter'
+app.get('/', (req, res) => {
+  res.status(200).json({ status: 'ok', message: 'VivreCard API is running' });
+});
+
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
